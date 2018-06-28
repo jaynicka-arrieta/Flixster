@@ -3,6 +3,7 @@ package ilovecats.com.flixster;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,10 +62,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         //load image using glide
         GlideApp.with(context)
                 .load(imageUrl)
-                .transform(new RoundedCornersTransformation(context, 25, 0))
+                .transform(new RoundedCornersTransformation(25, 0))
                 .placeholder(R.drawable.flicks)
                 .error(R.drawable.flicks)
                 .into(holder.ivPosterImage);
+        Log.d("MovieAdapter", String.format("grabbing image url: %s", imageUrl));
 
     }
 
