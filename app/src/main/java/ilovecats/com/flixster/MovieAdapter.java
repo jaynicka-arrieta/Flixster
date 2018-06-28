@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 
 import ilovecats.com.flixster.models.Config;
@@ -61,9 +59,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         String imageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
 
         //load image using glide
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(imageUrl)
-                .bitmapTransform(new RoundedCornersTransformation(context, 25, 0))
+                .transform(new RoundedCornersTransformation(context, 25, 0))
                 .placeholder(R.drawable.flicks)
                 .error(R.drawable.flicks)
                 .into(holder.ivPosterImage);
