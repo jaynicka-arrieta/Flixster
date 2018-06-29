@@ -1,6 +1,7 @@
 package ilovecats.com.flixster;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -57,15 +58,31 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         holder.tvOverview.setText(movie.getOverview());
 
         //build url for poster image
-        String imageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
+        String imageUrl = null;
+
+        //determine orientation
+        boolean isPortrait = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+        //if in p mode, load p image
+        if (isPortrait) {
+            imageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
+        } else {
+            imageUrl = config.getImageUrl(config.getBackdropSize(), movie.getBackdropPath());
+        }
+
+        //get correct placeholder and image view
+        int placeholderid = isPortrait ? R.drawable.flicks : R.drawable.flicks_backdrop_placeholder;
+        ImageView imageView = isPortrait ? holder.ivPosterImage : holder.ivBackdropImage;
+
+
 
         //load image using glide
         GlideApp.with(context)
                 .load(imageUrl)
-                .transform(new RoundedCornersTransformation(25, 0))
-                .placeholder(R.drawable.flicks)
-                .error(R.drawable.flicks)
-                .into(holder.ivPosterImage);
+                .transform(new RoundedCornersTransformation(15, 0))
+                .placeholder(placeholderid)
+                .error(placeholderid)
+                .into(imageView);
         Log.d("MovieAdapter", String.format("grabbing image url: %s", imageUrl));
 
     }
@@ -80,11 +97,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         //track view objects
         ImageView ivPosterImage;
+        ImageView ivBackdropImage;
         TextView tvTitle;
         TextView tvOverview;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivPosterImage = (ImageView) itemView.findViewById(R.id.ivPosterImage);
+            ivBackdropImage = (ImageView) itemView.findViewById(R.id.ivBackdropImage);
             tvOverview = (TextView) itemView.findViewById(R.id.tvOverview);
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
         }
